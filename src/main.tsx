@@ -18,21 +18,21 @@ import 'bootstrap/dist/css/bootstrap.css'
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '',
     element:(
-        <App />
+    <App />
     ),
     children: [
       {
-        path: 'login',
+        path: '/login',
         element: <CheckAuth><Login /></CheckAuth>
       },
       {
-        path: 'register',
+        path: '/register',
         element: <CheckAuth><Register /></CheckAuth>,
       },
       {
-        path: 'update-todo/:id',
+        path: '/update-todo/:id',
         element:(
           <ProtectedRoute>
             <UpdateTask   />
@@ -40,7 +40,16 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: 'todo-list',
+        path: '/todo-list',
+        element: (
+          <ProtectedRoute>
+            <TodoList />
+          </ProtectedRoute>
+
+        ),
+      },
+       {
+        path: '/',
         element: (
           <ProtectedRoute>
             <TodoList />

@@ -1,5 +1,5 @@
 // src/api.js
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://todo-app-backend-9gn5.onrender.com/api";
 
 const API = {
   LOGIN: `${BASE_URL}/login`,

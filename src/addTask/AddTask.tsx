@@ -34,7 +34,7 @@ export default function AddTask({ onTaskAdded, spinner, loading = false }: AddTa
         <h2 className="text-center peacock-text mb-4">What would you love to see?</h2>
         <form onSubmit={handleAddTask}>
           <div className="mb-3">
-            <label htmlFor="task" className="form-label peacock-text">Task</label>
+            <label htmlFor="task" className="form-label peacock-text">explain me in your words</label>
             <input
               type="text"
               id="task"

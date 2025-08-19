@@ -1,5 +1,5 @@
 // MovieList.jsx
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useEffect } from "react";
 import Header from "../Header/Header";
 import "./BookingList.css";
@@ -36,7 +36,7 @@ useEffect(() => {
     fetchData();
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id:string ) => {
    const response = ApiCall({
       apiname: "DELETE_BOOKING",
       userData: { id },

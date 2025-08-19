@@ -31,7 +31,7 @@ export default function AddTask({ onTaskAdded, spinner, loading = false }: AddTa
   return (
     <div className="d-flex justify-content-center vh-30 vw-40">
       <div className="login-card col-12 col-sm-6 col-md-4">
-        <h2 className="text-center peacock-text mb-4">Explain what you want to see</h2>
+        <h2 className="text-center peacock-text mb-4">What would you love to see?</h2>
         <form onSubmit={handleAddTask}>
           <div className="mb-3">
             <label htmlFor="task" className="form-label peacock-text">Task</label>

@@ -1,0 +1,50 @@
+/* MovieList.css */
+.movie-list-container {
+  max-width: 90vw;
+  margin: 2rem auto;
+  padding: 1rem;
+  color: white;
+  font-family: Arial, sans-serif;
+  height: 80vh; /* Set fixed height for vertical scroll */
+  overflow-y: auto;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  text-align: center;
+  height: 330px; /* Card height */
+}
+
+.movie-img {
+  width: 150px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.movie-title {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.delete-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #e74c3c;
+  color: white;
+}

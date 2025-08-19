@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import "./register.css"; // Using the same styling as login
-import {Navigate} from "react-router-dom";
 import ApiCall from "../service/ApiCall";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner"; // Assuming you have a loading spinner component
-
+import { useNavigate } from "react-router-dom";
 export default function Register() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -21,6 +21,7 @@ export default function Register() {
 
   // Handle register submit
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
@@ -38,13 +39,13 @@ export default function Register() {
         }
       });
       console.log("Register success:", result.data);
+      navigate("/login");
       setLoading(false);
-      <Navigate to="/login" />
+     
     } catch (error: any) {
       setLoading(false);
       console.error("Register failed:", error);
-      <Navigate to="/register" />
-
+      navigate("/register");
     }
   };
 

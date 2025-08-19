@@ -5,5 +5,5 @@ import {
 export default function CheckAuth({ children }: { children: React.ReactNode }) {
   const isLoggedIn = localStorage.getItem("token"); // or from Redux/context
   console.log("CheckAuth render:", isLoggedIn);
-  return  isLoggedIn ? <Navigate to="/todo-list" /> : children;
+  return  isLoggedIn ? <Navigate to="/home" /> : children;
 }

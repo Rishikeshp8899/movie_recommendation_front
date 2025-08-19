@@ -4,6 +4,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import './Login.css'; // Assuming you have a CSS file for styling
 import ApiCall from "../service/ApiCall";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import { CheckResp } from "../auth/CheckResp";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -27,17 +28,19 @@ const [formData, setFormData] = useState({ username: "", password: "" });
         password: formData.password
       }
     });
-      console.log("Login success:", result.data);
-       localStorage.setItem("token", result.data.token);
-      setLoading(false);
-      navigate("/todo-list");
-
+    if (!CheckResp({ response: result })) {
+      console.error("Invalid token");
+      return;
+    }
+    console.log("Login success:", result.data.token);
+    localStorage.setItem("token", result.data.token);
     } catch (error: any) {
       console.error("Login failed:", error);
       setLoading(false);
      navigate("/login");
     }
     setLoading(false);
+    navigate("/home");
   };
 
   // Handle Google login success

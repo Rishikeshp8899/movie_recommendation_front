@@ -1,129 +1,86 @@
-import  { useEffect, useState } from "react";
+import {  useState } from "react";
 import AddTask from "../addTask/AddTask";
-import "./Todolist.css"; // reuse your theme
+import "./Todolist.css"; // CSS file for the styling
+import Header from "../Header/Header";
 import ApiCall from "../service/ApiCall";
-import { useNavigate } from "react-router-dom";
+import { CheckResp } from "../auth/CheckResp";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-import Header from "../Header/Header"; // Assuming you have a Header component for the page header
-
-interface Todo {
-  _id: string;
-  text: string;
-  completed: boolean;
+interface Movie {
+  id: string;
+  movie: string;
+  url: string;
 }
 
-export default function TodoList() {
-  const navigate = useNavigate();
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [loading, setLoading] = useState(false);
+export default function MovieList() {
+  const [movies, setMovies] = useState<Movie[]>([]);
+ const [loading, setLoading] = useState(false);
 
-  // Toggle complete status
-  const fetchTodos = async () => {
-    setLoading(true);
+  const handleBookShow = async (movieId: string) => {
     try {
-      const res = await ApiCall({ apiname: "GET_TODOS" });
-      setTodos(res.data || []); // Adjust depending on your API's response shape
-    } catch (err) {
-      console.error("Error fetching todos:", err);
+       console.log("Show booked successfully:");
+      const response = await ApiCall(
+        {
+          apiname: "CREATE_BOOKING",
+          userData: { movieId: movieId },
+        }
+      );
+    if (!CheckResp({ response })) {
+      console.error("Invalid token");
+      return;
     }
-    setLoading(false);
-  };
+    setMovies((prevMovies) => prevMovies.filter(movie => String(movie.id) !== String(movieId)));
 
-    // Delete todo
-  const handleDelete = async (id: string) => {
-    setLoading(true);
-    try {
-      await ApiCall({ apiname: "DELETE_TODO", userData: { id } });
-      setTodos(todos.filter((todo) => todo._id !== id));
-      fetchTodos();
-      setLoading(false);
-    } catch (err) {
-      console.error("Delete failed:", err);
-      setLoading(false);
-    }
-  };
-
-  const handleUpdate = async (id: string) => {
-    setLoading(true);
-    try {
-      setLoading(false);
-      navigate(`/update-todo/${id}`);
-    } catch (err) {
-      console.error("Update failed:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
-
-
-  return  loading ? (
-  <LoadingSpinner />
-) : (
-  <> 
-    <Header  />
-  <div className="container-fluid vh-100 bg-black text-white p-3">
-
-    <div className="row h-100">
-      {/* Left quarter - Add Task */}
-      <div className="col-12 col-md-5 mb-6">
-        <AddTask onTaskAdded={(text) => {
-          setTodos([...todos, { _id: Date.now().toString(), text, completed: false }]);
-          fetchTodos();
-        }} />
-      </div>
-
-      {/* Todo List */}
+    console.log("Show booked successfully:", movies);
+    alert("Show booked successfully!");
     
-      <div className="col-12 col-md-7">
-        <h2 className="peacock-text mb-4">Todo List</h2>
-        <ul className="list-group">
-          {todos.map((todo) => (
-            <li
-              key={todo._id}
-              className="list-group-item d-flex justify-content-between align-items-center bg-dark text-white border-secondary"
-            >
-              <span
-                style={{
-                  textDecoration: todo.completed ? "line-through" : "none",
-                  cursor: "pointer",
-                }}
-              >
-                {todo.text}
-              </span>
-              <div>
-                <button
-                  className="btn btn-sm peacock-btn me-2"
-                >
-                  {todo.completed ? "Undo" : "Complete"}
-                </button>
-                <button
-                  className="btn btn-sm btn-warning me-2"
-                  onClick={() => handleUpdate(todo._id)}
-                >
-                  Update
-                </button>
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => handleDelete(todo._id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-          {todos.length === 0 && (
-            <li className="list-group-item bg-dark text-white border-secondary">
-              No tasks found
-            </li>
-          )}
-        </ul>
-      </div>
-    </div>
-  </div>
-  </>
-);
+  } catch (error) {
+    console.error("Error booking show:", error);
+    alert("Failed to book show. Please try again.");
+  }
+  };
 
+  return (
+    <>
+      <Header  homepage="/home"/>
+      <div className="container-fluid vh-100 bg-black text-white p-3">
+        <div className="row h-100">
+          {/* Left: Add Task */}
+          <div className="col-12 col-md-5 mb-3">
+            <AddTask onTaskAdded={(text) =>{
+              console.log("Task added:", text);
+              setMovies(text.prediction || []);
+            }} 
+            spinner={setLoading} 
+  loading={loading}
+            />
+          </div>
+
+          {/* Right: Movie Grid */}
+          <div className="col-12 col-md-7">
+            {
+               loading ? ( <LoadingSpinner />) : (
+              movies.length === 0 ? <p>No movies available</p> :
+              <>
+                <h2 className="peacock-text mb-4">Movie List</h2>
+                <div className="movie-grid" >
+                  {movies.map((movie) => (
+                    <div key={movie.id} className="login-card movie-card">
+                  <img src={movie.url} alt={movie.movie} className="img-fluid" />
+                  <h5 className="peacock-text mt-2">{movie.movie}</h5>
+                  <button className="btn peacock-btn mt-2 text" onClick={() => handleBookShow(`${movie.id}`)}>
+                    Book the Show
+                  </button>
+                </div>
+              ))}
+            </div>
+              </>
+               )
+            }
+          </div>
+        </div>
+      </div>
+    </>
+    );
 }
+
+

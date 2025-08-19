@@ -1,45 +1,40 @@
-
 import React, { useState } from "react";
-import "./AddTask.css"; // Reuse login theme
 import ApiCall from "../service/ApiCall";
-
 interface AddTaskProps {
-  onTaskAdded: (text:string) => void;
+  onTaskAdded: (userdata: any) => void;
+  spinner: (data: any) => void;
+  loading?: boolean;   // <-- add this
 }
 
-export default function AddTask({ onTaskAdded }: AddTaskProps) {
+export default function AddTask({ onTaskAdded, spinner, loading = false }: AddTaskProps) {
   const [task, setTask] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleAddTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-
+    spinner(true);
     try {
-      await ApiCall({
-        apiname: "CREATE_TODO",
-        userData: { text: task },
+      const response = await ApiCall({
+        apiname: "GET_RECOMMENDATIONS",
+        userData: { query: task },
       });
-      setLoading(false);
-
+      console.log("API Response:", response.data);
+      onTaskAdded(response.data);
     } catch (error: any) {
       console.error("Add task failed:", error);
-      setLoading(false);
+      onTaskAdded(null);
+    } finally {
+      spinner(false);
     }
-    onTaskAdded(task);
+    setTask("");
   };
 
   return (
-    <div className="d-flex justify-content-center  vh-40 vw-40">
+    <div className="d-flex justify-content-center vh-30 vw-40">
       <div className="login-card col-12 col-sm-6 col-md-4">
-        <h2 className="text-center peacock-text mb-4">Add Task</h2>
-
-        {/* Task Form */}
+        <h2 className="text-center peacock-text mb-4">Explain what you want to see</h2>
         <form onSubmit={handleAddTask}>
           <div className="mb-3">
-            <label htmlFor="task" className="form-label peacock-text">
-              Task
-            </label>
+            <label htmlFor="task" className="form-label peacock-text">Task</label>
             <input
               type="text"
               id="task"
@@ -56,7 +51,7 @@ export default function AddTask({ onTaskAdded }: AddTaskProps) {
             className="btn peacock-btn w-100 mt-3 border-info bg-gradient text-info"
             disabled={loading}
           >
-            {loading ? "Adding..." : "Add Task"}
+            {loading ? "Searching..." : "Search"}
           </button>
         </form>
       </div>
